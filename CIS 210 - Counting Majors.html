@@ -1,0 +1,291 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!-- saved from url=(0067)https://classes.cs.uoregon.edu/16F/cis210/assignments/W2-Majors.php -->
+<html class="gr__classes_cs_uoregon_edu"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- This is for the <head> section of CIS210 pages,
+     not for the page header in the <body> section. 
+   Include here metadata including css links, etc., 
+   but omit the <title> element which may be specific
+   to each page. 
+   Set $root before calling this.
+-->
+
+
+<meta name="description" content="CIS 210, Computer Science 1">
+<meta name="keywords" content="Computer science, CS1"> 
+<meta name="author" content="Michal Young"> 
+
+   <link rel="stylesheet" type="text/css" href="./CIS 210 - Counting Majors_files/cis210.css" media="screen">
+   <link rel="stylesheet" type="text/css" href="./CIS 210 - Counting Majors_files/cis210-print.css" media="print">
+
+<title>CIS 210 - Counting Majors</title></head>
+
+<body data-gr-c-s-loaded="true">
+<div class="container">
+
+  <!-- pagehead.php: Page header to include on each page -->
+
+<div class="pageheader">
+   <div class="title">
+   <h1>CIS 210, Fall 2016<br> Introduction to Computer Science</h1>
+   </div> <!-- title -->
+   </div> <!-- pageheader -->
+<!-- end pagehead.php -->
+  <!-- sidebar.php:  Sidebar to be replicated on each page 
+     Note links must be relative to site URL-->
+<div class="sidenav">
+   <h1>Main Menu</h1>
+   <ul>
+   <li><a href="https://classes.cs.uoregon.edu/16F/cis210/index.php">Class home page</a></li>
+   <li><a href="https://piazza.com/uoregon/fall2016/cis210/home">Piazza</a></li>
+   <li><a href="https://classes.cs.uoregon.edu/16F/cis210/hints.php">How to Succeed</a></li>
+   <li><a href="https://classes.cs.uoregon.edu/16F/cis210/schedule.php">Schedule</a></li>
+   <li><a href="https://classes.cs.uoregon.edu/16F/cis210/assignments.php">Assignments</a></li>
+   <li><a href="https://classes.cs.uoregon.edu/16F/cis210/references.php">References</a></li>
+  <li><a href="https://classes.cs.uoregon.edu/16F/cis210/exams.php">Exams</a></li>
+<!--
+  <li><a href="/16F/cis210/assignments/Contest.php" >Contest</a></li>
+-->
+   </ul>
+</div>
+
+<div class="content">
+
+<div class="item">
+  <h1>Assignment 2, part 1: Counting majors</h1>
+<p>This assignment is due at 5pm on Friday, October 7.  Use
+  Canvas to turn in counts.py electronically.</p>
+
+<h1>Purpose</h1>
+<p>
+  This is primarily an exercise in careful loop design with a
+  'case breakdown' of what should happen on the first iteration,
+  different possibilities in the loop body, and after the last
+  iteration.
+</p>
+
+
+<h1>Pair Assignment</h1>
+  <p>You are encouraged to use <em>pair programming</em> to
+  complete this assignment. Work together with one classmate.
+  </p>
+  <p>Before writing code at the computer, you should work together and
+  independently on the design.  Each of you should be able to clearly
+  explain how the program or a part of the program will work.  
+  When you are convinced that you both understand how the code will
+  work, then and only then are you ready to write the code.</p>
+
+
+</div>
+
+
+<div class="item">
+<h1>Counting majors</h1>
+
+<p>
+  CIS 210 is taken by nearly all CIS majors, but also by many students
+  majoring in other fields, and by students who have not yet declared
+  a major.  What is the distribution?  We can find out,  based on a
+  column from the class list that gives 
+  the major code for each student.  I saved that column to a file.
+  Part of that file looks like this:
+  </p>
+  <pre>EC
+CIS
+EC
+UNDL
+UNDL
+CIS
+BI
+HIST
+MACS
+CIS
+  </pre>
+<p>
+We'll create a Python program to count the number of times 
+each major code appears.  The output from a different term
+  looked like this: 
+  </p>
+<pre>BIC 1
+CIS 64
+EC 5
+GEOG 1
+GS 1
+HIST 1
+
+</pre>
+<p>Counting or summarizing items in a sequence like this is a very
+  common task.  There is more than one way to do it; we'll look
+  at an approach that starts by putting items in sorted order (so that
+  each group to be summarized appears together in the sequence) and
+  then scanning them in a loop.
+  </p>
+
+<p>
+  A common loop idiom, sometimes called “control break logic”, is to
+  summarize something for groups of contiguous data items.  For
+  example, we might want to summarize the list [ 'a', 'a', 'a', 'x',
+  'x' ] by counting:  3 a, 2 x.  A loop to summarize adjacent items
+  with something in common requires considering at least four cases:
+  The first item in the sequence, an item that starts a new
+  sub-sequence of like items, an item that ends one sub-sequence and
+  starts another, and the last item (or last sub-sequence) in the
+  sequence.  See below for discussion of how to handle these. 
+  </p>
+
+  <h2>Requirements</h2>
+  <p>Your program will read a file containing a list of major codes,
+  which may be in arbitrary order.  Each major code appears on a line
+  by itself, and every line in the file contains a major code (there
+  are no blank lines).  Your program will print one line for each
+  distinct major code along with a count of the number of times that
+  major code appears in the file.  For example, suppose file
+  <kbd>part.txt</kbd> contains these lines:
+</p>
+<kbd>
+<pre>CIS
+CIS
+PEN
+CIS
+UNDL
+UNDL
+CIS
+CIS
+GEOG
+UNDL
+CIS
+CIS
+MATH
+CIS
+MACS
+CIS
+
+</pre></kbd>
+
+<p>
+Then, running the counts.py program would work like this:
+</p>
+
+<kbd><pre>&gt; $ python3 counts.py part.txt 
+CIS 9
+GEOG 1
+MACS 1
+MATH 1
+PEN 1
+UNDL 3
+
+</pre></kbd>
+
+<p>We will print the output in alphabetical order by major
+  code.
+</p>
+
+
+<h1>Notes and hints on the majors counter</h1>
+
+<p>I will provide you with starter code that reads the whole file into
+an array, and then sorts that array so that lines are in alphabetical
+order. This will also group all the entries for a major code
+together.  So, for example, the <kbd>part.txt</kbd> file above is
+converted into this sorted list:
+</p>
+<kbd><pre>['CIS', 'CIS', 'CIS', 'CIS', 'CIS', 'CIS', 'CIS', 'CIS',
+ 'CIS', 'GEOG', 'MACS', 'MATH', 'PEN', 'UNDL', 'UNDL', 'UNDL']
+
+</pre></kbd>
+<p>
+You have to provide the logic to count the items in each subsequence
+(e.g., the 9 occurrences of CIS) and print the counts.
+</p>
+
+<p>
+You will, of course, loop through the items in the list.  
+It's easiest to think about your logic first by considering what
+happens within the loop, dividing into two cases:
+</p>
+<ul>
+  <li>The current item is the same as the item before it.
+  We will increase the count for that item.
+  </li>
+  <li>The current item is different from the item before it.
+  This must be the end of one group and the beginning of another.
+  We will print the count for the group we are leaving, and start a
+  new count for the group we are starting.
+  </li>
+</ul>
+<p>This logic will have to be adjusted a bit so that we handle the
+beginning (starting the first group) and the end (summarizing the last
+group) correctly.  If the list contains at least one item, we can
+initialize the current major code to the first major code in the list,
+and start the count at 0; then the first case for the loop body above
+will do the right thing (it will 'continue' counting that group of
+major codes).</p>
+<p>There are a couple of ways to handle the last group.  Perhaps the
+simplest is to add a special, bogus major code at the end of the list.
+This is called a 'sentinel value', and is a common trick to avoid
+having to write special code for handling the end of a sequence. Of
+course we need to be very sure that the sentinel value cannot occur as
+a major code in the file.  We might for example add this statement
+before the loop:
+</p>
+ <kbd><pre>    majors.append("This is not a valid major code")
+ </pre></kbd>
+
+<p>With these careful adjustments to the initialization, the two cases
+described above for the loop body will handle the first and last group
+correctly, without any special handling inside or after the
+loop. 
+</p>
+<kbd><pre>    if len(majors) == 0:
+        print("File is empty")
+        return
+</pre></kbd>
+
+<p>
+Here is some <a href="https://classes.cs.uoregon.edu/16F/cis210/assignments/base/counts.py">starter code</a> to get
+started, and a <a href="https://classes.cs.uoregon.edu/16F/cis210/assignments/base/majors/majors.txt">sample data file</a>.
+</p>
+</div>
+
+<div class="item">
+<h1>Grading</h1>
+<p>35 points possible</p>
+  <ul>
+    <li>15: Program runs and consistently produces correct
+    output for any text file containing a sequence of major codes,
+    one per line.  You may assume that valid major codes are 
+    sequences of alphabetic characters only (no spaces, punctuation,
+    or special characters).
+    </li>
+
+    <li>10: Follows <a href="https://classes.cs.uoregon.edu/16F/cis210/handouts/styleguide.php">CIS 210 coding guidelines</a>, including author
+    identification and header .</li>
+    <li>10: Clarity.  The program should not only be consistent with
+    the requirements and approach described here, but it should be
+    very easy to read the program and verify its consistency with the
+    spec. </li>
+   </ul>
+</div>
+
+
+
+</div> <!-- class content -->
+
+<!-- pagefoot.php: Page footing to include on each page -->
+<div class="clearer">  </div>
+   <div class="footer">
+
+   <span style="float: left">
+   Contact <a href="mailto:jsventek@uoregon.edu?subject=CIS%20210%20web%20site">webmaster</a>.
+   </span>
+   <span style="float: right">  Based loosely on Transparentia design by Arcsin, from OSWD.org. </span>
+      &nbsp; <!-- Space to put the two floats above.  Setting text justification does not seem to do it. -->
+   </div>
+<!-- Track our traffic ?? -->
+<!-- End pagefoot.php -->
+
+</div> <!-- class container -->
+
+
+
+
+</body><span class="gr__tooltip"><span class="gr__tooltip-content"></span><i class="gr__tooltip-logo"></i><span class="gr__triangle"></span></span></html>
